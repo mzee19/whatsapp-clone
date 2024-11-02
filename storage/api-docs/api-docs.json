@@ -1,0 +1,265 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "WhatsApp-like API Server",
+        "description": "API documentation for chat functionality",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/chatrooms": {
+            "post": {
+                "tags": [
+                    "Chatrooms"
+                ],
+                "summary": "Create a new chatroom",
+                "description": "Creates a new chatroom with a specified name and max members.",
+                "operationId": "7dd1f33613be0a7768a883a32e9c0e5b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "General Chat"
+                                    },
+                                    "max_members": {
+                                        "type": "integer",
+                                        "example": 100
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Chatroom created successfully"
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/chatrooms/{id}/enter": {
+            "post": {
+                "tags": [
+                    "Chatrooms"
+                ],
+                "summary": "Enter a chatroom",
+                "description": "Allows a user to enter a chatroom, provided it has not reached its maximum capacity.",
+                "operationId": "99e6d6f5f342320cc6f39fb0dfa54fcd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Chatroom ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User successfully entered the chatroom",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Entered chatroom"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Chatroom is full"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/chatrooms/{id}/leave": {
+            "post": {
+                "tags": [
+                    "Chatroom"
+                ],
+                "summary": "Leave a chatroom",
+                "description": "Allows a user to leave a specified chatroom",
+                "operationId": "leaveChatroom",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the chatroom",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Left chatroom",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Left chatroom"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/chatrooms/{id}/messages": {
+            "get": {
+                "tags": [
+                    "Message"
+                ],
+                "summary": "List messages in a chatroom",
+                "description": "Lists all messages in a specified chatroom",
+                "operationId": "listMessages",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the chatroom",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of messages",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "content": {
+                                                "type": "string",
+                                                "example": "Hello!"
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "example": "text"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "example": "2024-11-02 10:00:00"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Send a message in a chatroom",
+                "description": "Allows a user to send a message or attachment in a specified chatroom.",
+                "operationId": "dab9b0a24555437db122ebcf7631a293",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Chatroom ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "message": {
+                                        "type": "string",
+                                        "example": "Hello, everyone!"
+                                    },
+                                    "attachment": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Message sent successfully"
+                    },
+                    "400": {
+                        "description": "Invalid message data"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Chatrooms",
+            "description": "Chatroom management endpoints"
+        },
+        {
+            "name": "Messages",
+            "description": "Messaging endpoints"
+        },
+        {
+            "name": "Chatroom",
+            "description": "Chatroom"
+        },
+        {
+            "name": "Message",
+            "description": "Message"
+        }
+    ]
+}
